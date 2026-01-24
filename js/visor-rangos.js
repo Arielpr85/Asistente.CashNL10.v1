@@ -126,9 +126,11 @@ function renderFromUI() {
   renderAllForPos(data, posSelect.value, vsOpenSelect?.value, vs3betSelect?.value);
 }
 
+function renderFromUI() {
+  renderAllForPos(data, posSelect.value);
+}
+
 posSelect.addEventListener("change", renderFromUI);
-vsOpenSelect?.addEventListener("change", renderFromUI);
-vs3betSelect?.addEventListener("change", renderFromUI);
 
 // auto: si querés arrancar en UTG
 // posSelect.value = "UTG"; renderAllForPos(data, "UTG");
