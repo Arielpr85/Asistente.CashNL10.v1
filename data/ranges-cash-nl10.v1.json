@@ -7,40 +7,418 @@
   },
   "positions": {
     "UTG": {
-      "firstIn": { "openRaise": ["AA","KK","QQ","JJ","TT","AKs","AKo","AQs","AQo","AJs","KQs"] },
-      "overLimp": { "overLimp": [], "isoRaise": [] },
-      "vsOpen": { "default": { "call": [], "threeBet": [] } },
-      "vs3bet": { "default": { "call": [], "fourBet": [] } }
+      "firstIn": {
+        "openRaise": ["AA","KK","QQ","JJ","TT","99","88","77","AKs","AQs","AJs","ATs","A9s","KQs","KJs","KTs","QJs","JTs","AKo","AQo"]
+      },
+      "overLimp": {
+        "overLimp": [],
+        "isoRaise": ["AA","KK","QQ","JJ","TT","99","88","77","AKs","AQs","AJs","ATs","A9s","KQs","KJs","KTs","QJs","QTs","JTs","AKo","AQo","AJo","KQo"]
+      },
+      "vsOpen": {
+        "default": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "UTG": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "MP": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "CO": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "BTN": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "SB": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "BB": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        }
+      },
+      "vs3bet": {
+        "default": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "UTG": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "MP": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "CO": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "BTN": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "SB": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "BB": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        }
+      }
     },
     "MP": {
-      "firstIn": { "openRaise": ["AA","KK","QQ","JJ","TT","99","AKs","AKo","AQs","AQo","AJs","AJo","ATs","KQs","QJs"] },
-      "overLimp": { "overLimp": [], "isoRaise": [] },
-      "vsOpen": { "default": { "call": [], "threeBet": [] } },
-      "vs3bet": { "default": { "call": [], "fourBet": [] } }
+      "firstIn": {
+        "openRaise": ["AA","KK","QQ","JJ","TT","99","88","77","66","AKs","AQs","AJs","ATs","A9s","A5s","KQs","KJs","KTs","QJs","QTs","JTs","AKo","AQo","AJo","KQo"]
+      },
+      "overLimp": {
+        "overLimp": [],
+        "isoRaise": ["AA","KK","QQ","JJ","TT","99","88","77","AKs","AQs","AJs","ATs","A9s","A5s","KQs","KJs","KTs","QJs","QTs","JTs","AKo","AQo","AJo","KQo"]
+      },
+      "vsOpen": {
+        "default": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "UTG": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "MP": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "CO": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "BTN": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "SB": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "BB": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        }
+      },
+      "vs3bet": {
+        "default": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "UTG": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "MP": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "CO": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "BTN": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "SB": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "BB": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        }
+      }
     },
     "CO": {
-      "firstIn": { "openRaise": ["AA","KK","QQ","JJ","TT","99","88","77","AKs","AKo","AQs","AQo","AJs","AJo","ATs","ATo","A9s","KQs","KJs","QJs","JTs","T9s"] },
-      "overLimp": { "overLimp": [], "isoRaise": [] },
-      "vsOpen": { "default": { "call": [], "threeBet": [] } },
-      "vs3bet": { "default": { "call": [], "fourBet": [] } }
+      "firstIn": {
+        "openRaise": ["AA","KK","QQ","JJ","TT","99","88","77","66","55","44","33","22","AKs","AQs","AJs","ATs","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KQs","KJs","KTs","K9s","QJs","QTs","Q9s","JTs","J9s","T9s","98s","87s","76s","65s","AKo","AQo","AJo","ATo","KQo","KJo","KTo","QJo","QTo","JTo"]
+      },
+      "overLimp": {
+        "overLimp": [],
+        "isoRaise": ["AA","KK","QQ","JJ","TT","99","88","77","AKs","AQs","AJs","ATs","A9s","KQs","KJs","KTs","QJs","QTs","JTs","T9s","AKo","AQo","AJo","ATo","KQo","KJo","KTo","QJo","QTo","JTo"]
+      },
+      "vsOpen": {
+        "default": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "UTG": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "MP": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "CO": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "BTN": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "SB": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "BB": {
+          "call": [],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        }
+      },
+      "vs3bet": {
+        "default": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "UTG": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "MP": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "CO": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "BTN": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "SB": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "BB": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        }
+      }
     },
     "BTN": {
-      "firstIn": { "openRaise": ["AA","KK","QQ","JJ","TT","99","88","77","66","55","44","33","22","AKs","AKo","AQs","AQo","AJs","AJo","ATs","ATo","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KQs","KJs","KTs","QJs","QTs","JTs","J9s","T9s","98s","76s"] },
-      "overLimp": { "overLimp": [], "isoRaise": [] },
-      "vsOpen": { "default": { "call": [], "threeBet": [] } },
-      "vs3bet": { "default": { "call": [], "fourBet": [] } }
+      "firstIn": {
+        "openRaise": ["AA","KK","QQ","JJ","TT","99","88","77","66","55","44","33","22","AKs","AQs","AJs","ATs","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KQs","KJs","KTs","K9s","K8s","K7s","K6s","K5s","QJs","QTs","Q9s","Q8s","JTs","J9s","J8s","T9s","T8s","98s","97s","87s","86s","76s","75s","65s","64s","54s","AKo","AQo","AJo","ATo","A9o","A8o","KQo","KJo","KTo","K9o","QJo","QTo","JTo","T9o"]
+      },
+      "overLimp": {
+        "overLimp": ["66","55","44","33","22","A8s","A7s","A6s","A5s","A4s","A3s","A2s"],
+        "isoRaise": ["AA","KK","QQ","JJ","TT","99","88","77","AKs","AQs","AJs","ATs","A9s","KQs","KJs","KTs","QJs","QTs","JTs","T9s","AKo","AQo","AJo","ATo","KQo","KJo","KTo","QJo","QTo","JTo"]
+      },
+      "vsOpen": {
+        "default": {
+          "call": ["99","88","77","66","55","44","33","22","AJs","ATs","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "UTG": {
+          "call": ["99","88","77","66","55","44","33","22","AJs","ATs","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "MP": {
+          "call": ["99","88","77","66","55","44","33","22","AJs","ATs","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "CO": {
+          "call": ["99","88","77","66","55","44","33","22","AJs","ATs","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "BTN": {
+          "call": ["99","88","77","66","55","44","33","22","AJs","ATs","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "SB": {
+          "call": ["99","88","77","66","55","44","33","22","AJs","ATs","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        },
+        "BB": {
+          "call": ["99","88","77","66","55","44","33","22","AJs","ATs","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","KQs","AKo","AQo"]
+        }
+      },
+      "vs3bet": {
+        "default": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs","KQs","QJs","JTs","AQo"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "UTG": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs","KQs","QJs","JTs","AQo"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "MP": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs","KQs","QJs","JTs","AQo"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "CO": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs","KQs","QJs","JTs","AQo"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "BTN": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs","KQs","QJs","JTs","AQo"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "SB": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs","KQs","QJs","JTs","AQo"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "BB": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs","KQs","QJs","JTs","AQo"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        }
+      }
     },
     "SB": {
-      "firstIn": { "openRaise": ["AA","KK","QQ","JJ","TT","99","88","77","AKs","AKo","AQs","AQo","AJs","AJo","ATs","KQs"] },
-      "overLimp": { "overLimp": [], "isoRaise": [] },
-      "vsOpen": { "default": { "call": [], "threeBet": [] } },
-      "vs3bet": { "default": { "call": [], "fourBet": [] } }
+      "firstIn": {
+        "openRaise": ["AA","KK","QQ","JJ","TT","99","88","77","66","55","44","33","22","AKs","AQs","AJs","ATs","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KQs","KJs","KTs","K9s","QJs","QTs","Q9s","JTs","J9s","T9s","98s","87s","76s","65s","AKo","AQo","AJo","ATo","KQo","KJo","KTo","QJo","QTo","JTo"]
+      },
+      "overLimp": {
+        "overLimp": ["99","88","77","66","55","44","33","22","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KJs","KTs","K9s","QJs","QTs","Q9s","JTs","J9s","T9s","98s","87s","76s","65s","AJo","ATo","KJo","KTo","QJo","QTo","JTo"],
+        "isoRaise": ["AA","KK","QQ","JJ","TT","AKs","AQs","AJs","ATs","KQs","AKo","AQo","KQo"]
+      },
+      "vsOpen": {
+        "default": {
+          "call": ["99","88","77","66","55","44","33","22","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KJs","KTs","QJs","QTs","JTs"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","AJs","ATs","KQs","AKo","AQo","KQo"]
+        },
+        "UTG": {
+          "call": ["99","88","77","66","55","44","33","22","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KJs","KTs","QJs","QTs","JTs"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","AJs","ATs","KQs","AKo","AQo","KQo"]
+        },
+        "MP": {
+          "call": ["99","88","77","66","55","44","33","22","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KJs","KTs","QJs","QTs","JTs"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","AJs","ATs","KQs","AKo","AQo","KQo"]
+        },
+        "CO": {
+          "call": ["99","88","77","66","55","44","33","22","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KJs","KTs","QJs","QTs","JTs"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","AJs","ATs","KQs","AKo","AQo","KQo"]
+        },
+        "BTN": {
+          "call": ["99","88","77","66","55","44","33","22","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KJs","KTs","QJs","QTs","JTs"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","AJs","ATs","KQs","AKo","AQo","KQo"]
+        },
+        "SB": {
+          "call": ["99","88","77","66","55","44","33","22","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KJs","KTs","QJs","QTs","JTs"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","AJs","ATs","KQs","AKo","AQo","KQo"]
+        },
+        "BB": {
+          "call": ["99","88","77","66","55","44","33","22","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KJs","KTs","QJs","QTs","JTs"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","AJs","ATs","KQs","AKo","AQo","KQo"]
+        }
+      },
+      "vs3bet": {
+        "default": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "UTG": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "MP": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "CO": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "BTN": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "SB": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "BB": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        }
+      }
     },
     "BB": {
-      "firstIn": { "openRaise": [] },
-      "overLimp": { "overLimp": [], "isoRaise": [] },
-      "vsOpen": { "default": { "call": [], "threeBet": [] } },
-      "vs3bet": { "default": { "call": [], "fourBet": [] } }
+      "firstIn": {
+        "openRaise": []
+      },
+      "overLimp": {
+        "overLimp": [],
+        "isoRaise": ["AA","KK","QQ","JJ","TT","99","88","77","66","55","44","33","22","AKs","AQs","AJs","ATs","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KQs","KJs","KTs","K9s","K8s","K7s","K6s","K5s","QJs","QTs","Q9s","Q8s","JTs","J9s","J8s","T9s","T8s","98s","97s","87s","86s","76s","75s","65s","64s","54s","AKo","AQo","AJo","ATo","A9o","A8o","A7o","A6o","A5o","KQo","KJo","KTo","K9o","QJo","QTo","JTo","T9o"]
+      },
+      "vsOpen": {
+        "default": {
+          "call": ["99","88","77","66","55","44","33","22","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KJs","KTs","K9s","K8s","K7s","K6s","K5s","QJs","QTs","Q9s","Q8s","JTs","J9s","J8s","T9s","98s","87s","76s","65s","54s","AJo","ATo","A9o","A8o","A7o","A6o","A5o","KJo","KTo","K9o","QJo","QTo","JTo","T9o"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","AJs","ATs","KQs","AKo","AQo","KQo"]
+        },
+        "UTG": {
+          "call": ["99","88","77","66","55","44","33","22","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KJs","KTs","K9s","K8s","K7s","K6s","K5s","QJs","QTs","Q9s","Q8s","JTs","J9s","J8s","T9s","98s","87s","76s","65s","54s","AJo","ATo","A9o","A8o","A7o","A6o","A5o","KJo","KTo","K9o","QJo","QTo","JTo","T9o"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","AJs","ATs","KQs","AKo","AQo","KQo"]
+        },
+        "MP": {
+          "call": ["99","88","77","66","55","44","33","22","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KJs","KTs","K9s","K8s","K7s","K6s","K5s","QJs","QTs","Q9s","Q8s","JTs","J9s","J8s","T9s","98s","87s","76s","65s","54s","AJo","ATo","A9o","A8o","A7o","A6o","A5o","KJo","KTo","K9o","QJo","QTo","JTo","T9o"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","AJs","ATs","KQs","AKo","AQo","KQo"]
+        },
+        "CO": {
+          "call": ["99","88","77","66","55","44","33","22","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KJs","KTs","K9s","K8s","K7s","K6s","K5s","QJs","QTs","Q9s","Q8s","JTs","J9s","J8s","T9s","98s","87s","76s","65s","54s","AJo","ATo","A9o","A8o","A7o","A6o","A5o","KJo","KTo","K9o","QJo","QTo","JTo","T9o"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","AJs","ATs","KQs","AKo","AQo","KQo"]
+        },
+        "BTN": {
+          "call": ["99","88","77","66","55","44","33","22","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KJs","KTs","K9s","K8s","K7s","K6s","K5s","QJs","QTs","Q9s","Q8s","JTs","J9s","J8s","T9s","98s","87s","76s","65s","54s","AJo","ATo","A9o","A8o","A7o","A6o","A5o","KJo","KTo","K9o","QJo","QTo","JTo","T9o"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","AJs","ATs","KQs","AKo","AQo","KQo"]
+        },
+        "SB": {
+          "call": ["99","88","77","66","55","44","33","22","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KJs","KTs","K9s","K8s","K7s","K6s","K5s","QJs","QTs","Q9s","Q8s","JTs","J9s","J8s","T9s","98s","87s","76s","65s","54s","AJo","ATo","A9o","A8o","A7o","A6o","A5o","KJo","KTo","K9o","QJo","QTo","JTo","T9o"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","AJs","ATs","KQs","AKo","AQo","KQo"]
+        },
+        "BB": {
+          "call": ["99","88","77","66","55","44","33","22","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KJs","KTs","K9s","K8s","K7s","K6s","K5s","QJs","QTs","Q9s","Q8s","JTs","J9s","J8s","T9s","98s","87s","76s","65s","54s","AJo","ATo","A9o","A8o","A7o","A6o","A5o","KJo","KTo","K9o","QJo","QTo","JTo","T9o"],
+          "threeBet": ["AA","KK","QQ","JJ","TT","AKs","AQs","AJs","ATs","KQs","AKo","AQo","KQo"]
+        }
+      },
+      "vs3bet": {
+        "default": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "UTG": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "MP": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "CO": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "BTN": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "SB": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        },
+        "BB": {
+          "call": ["JJ","TT","99","88","77","66","AJs","ATs"],
+          "fourBet": ["AA","KK","QQ","AKs","AQs","AKo"]
+        }
+      }
     }
   }
 }

@@ -1,34 +1,170 @@
 {
   "meta": {
     "name": "Postflop Cash NL10 v1",
-    "version": "1.0",
+    "version": "1.1",
     "notes": "Leyendas por boardType + handTier"
   },
-  "boardTypes": ["SECO", "COORDINADO", "PAREADO", "MONOTONO"],
+  "boardTypes": ["SECO", "A_HIGH", "COORDINADO", "PAREADO", "MONOTONO"],
   "handTiers": ["AIR", "WEAK", "MEDIUM", "STRONG", "MONSTER", "DRAW"],
   "rules": {
     "SECO": {
       "AIR": {
-        "title": "Bluff selectivo / give up",
-        "line": "CHECK (la mayoría) / BET chico con buen blocking",
-        "bullets": ["No farolear sin equity", "Elegí bluffs con blockers", "No overbluff en micros"]
+        "title": "Cbet chica / abandonar ante presión",
+        "line": "BET 33% (si fuiste agresor) / FOLD vs agresión fuerte",
+        "bullets": ["Boards secos permiten bluffs baratos", "No inviertas mucho sin equity", "Si te resuben fuerte, soltá"]
+      },
+      "WEAK": {
+        "title": "Control con frecuencia",
+        "line": "BET 33% o CHECK",
+        "bullets": ["Apuesta chica para protección", "Podés chequear para evitar inflar el pozo", "Evitar convertir en farol grande"]
       },
       "MEDIUM": {
-        "title": "Valor / control",
-        "line": "BET 33% o CHECK",
-        "bullets": ["Apostá chico por valor/protección", "Controlá si hay riesgo de raise", "No inflar pot vs calling stations"]
+        "title": "Valor sencillo",
+        "line": "BET 33% por valor",
+        "bullets": ["Muchas peores pagan", "Mantener tamaño chico para thin value"]
       },
       "STRONG": {
-        "title": "Valor claro",
-        "line": "BET 66%",
-        "bullets": ["Apostar más grande para cobrar", "Preparar 2 barrels en runouts buenos"]
+        "title": "Cobrar más",
+        "line": "BET 75%",
+        "bullets": ["Ya querés construir pozo", "Apunta a 2 barrels en runouts favorables"]
+      },
+      "MONSTER": {
+        "title": "Armar el pozo",
+        "line": "BET 75%",
+        "bullets": ["No slowplay excesivo", "Value grande desde el flop"]
+      },
+      "DRAW": {
+        "title": "Pocos draws disponibles",
+        "line": "BET 33% con backdoors / CHECK sin equity",
+        "bullets": ["Si no tenés backdoors, no fuerces", "Cuando apuestes, que sea barato"]
+      }
+    },
+    "A_HIGH": {
+      "AIR": {
+        "title": "Cbet rentable",
+        "line": "BET 33%",
+        "bullets": ["El As pega en tu rango agresor", "Muchos folds a tamaño chico"]
+      },
+      "WEAK": {
+        "title": "Chequeo o cbet chica",
+        "line": "CHECK o BET 33%",
+        "bullets": ["Apuesta si tenés algo de equity", "Evitar inflar contra floats"]
+      },
+      "MEDIUM": {
+        "title": "Valor chico",
+        "line": "BET 33%",
+        "bullets": ["Ax medio cobra fino", "Mantener control del pozo"]
+      },
+      "STRONG": {
+        "title": "Valor grande",
+        "line": "BET 75%",
+        "bullets": ["AK/AQ dominan", "Buscá stacks en runouts seguros"]
+      },
+      "MONSTER": {
+        "title": "Max value",
+        "line": "BET 75%",
+        "bullets": ["Querés crecer el pozo rápido", "No des cartas gratis"]
+      },
+      "DRAW": {
+        "title": "Semibluff chico",
+        "line": "BET 33%",
+        "bullets": ["Buen spot para cbet con equity", "Protegé contra floats con tamaño chico"]
       }
     },
     "COORDINADO": {
+      "AIR": {
+        "title": "Menos farol",
+        "line": "CHECK / FOLD vs apuesta grande",
+        "bullets": ["Board conectado favorece al caller", "Evitá farolear por deporte"]
+      },
+      "WEAK": {
+        "title": "Modo control",
+        "line": "CHECK",
+        "bullets": ["Mantener el pozo chico", "Evitar quedar comprometido sin equity"]
+      },
+      "MEDIUM": {
+        "title": "Protección selectiva",
+        "line": "BET 33% o CHECK",
+        "bullets": ["Apuesta si hay muchos turns peligrosos", "Chequea si querés controlar"]
+      },
+      "STRONG": {
+        "title": "Cobrar caro",
+        "line": "BET 75%",
+        "bullets": ["Muchos draws te pagan", "Querés value grande ya"]
+      },
+      "MONSTER": {
+        "title": "Stackear",
+        "line": "BET 75%",
+        "bullets": ["Construí pozo rápido", "No regales cartas"]
+      },
       "DRAW": {
-        "title": "Semibluff",
-        "line": "BET 66% (si tenés equity real)",
-        "bullets": ["Preferí draws con +outs", "Evitar faroles sin equity", "Si te pagan, evaluar turn según carta"]
+        "title": "Semibluff fuerte",
+        "line": "BET 75% con draw fuerte / CHECK con draw débil",
+        "bullets": ["FD/OESD/combo: agresión", "Draw débil: preferí pot control"]
+      }
+    },
+    "PAREADO": {
+      "AIR": {
+        "title": "Farol barato",
+        "line": "BET 33%",
+        "bullets": ["Difícil que conecten fuerte", "Tamaño chico imprime presión"]
+      },
+      "WEAK": {
+        "title": "Control flexible",
+        "line": "BET 33% o CHECK",
+        "bullets": ["Podés apostar por protección", "Chequea si tu equity es baja"]
+      },
+      "MEDIUM": {
+        "title": "Valor chico",
+        "line": "BET 33%",
+        "bullets": ["Querés cobrar sin inflar el pozo", "Protegé contra overcards"]
+      },
+      "STRONG": {
+        "title": "Valor grande",
+        "line": "BET 75%",
+        "bullets": ["Construí pozo", "Cobrales a pares peores"]
+      },
+      "MONSTER": {
+        "title": "Max value",
+        "line": "BET 75%",
+        "bullets": ["No slowplay excesivo", "Busca stacks en dos calles"]
+      },
+      "DRAW": {
+        "title": "Bluff con backdoors",
+        "line": "BET 33% si tenés overcards/backdoor",
+        "bullets": ["Sin equity, preferí check", "Cbet chico funciona bien"]
+      }
+    },
+    "MONOTONO": {
+      "AIR": {
+        "title": "Cuidado con faroles",
+        "line": "CHECK (sin palo) / BET 33% con un palo alto",
+        "bullets": ["Sin palo no inventes", "Con un palo alto podés semibluffear"]
+      },
+      "WEAK": {
+        "title": "Chequeo casi siempre",
+        "line": "CHECK",
+        "bullets": ["La gente paga con cualquier palo", "Evitar regalar fichas en bluffs"]
+      },
+      "MEDIUM": {
+        "title": "Valor selectivo",
+        "line": "BET 33% si tenés palo / CHECK si no",
+        "bullets": ["Con palo podés cobrar", "Sin palo, controlá el pozo"]
+      },
+      "STRONG": {
+        "title": "Valor grande",
+        "line": "BET 75%",
+        "bullets": ["Flush/set quieren pozo grande", "No des cartas gratis"]
+      },
+      "MONSTER": {
+        "title": "Max value",
+        "line": "BET 75%",
+        "bullets": ["Buscá stacks", "Apuesta fuerte desde el flop"]
+      },
+      "DRAW": {
+        "title": "Semibluff fuerte",
+        "line": "BET 75%",
+        "bullets": ["Draw de color fuerte = presión", "Podés ajustar a check/raise en el futuro"]
       }
     }
   }

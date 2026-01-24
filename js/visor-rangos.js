@@ -113,9 +113,11 @@ function renderAllForPos(data, pos){
 const data = getRangesData();
 const posSelect = document.getElementById("posSelect");
 
-posSelect.addEventListener("change", ()=>{
+function renderFromUI() {
   renderAllForPos(data, posSelect.value);
-});
+}
+
+posSelect.addEventListener("change", renderFromUI);
 
 // auto: si querés arrancar en UTG
 // posSelect.value = "UTG"; renderAllForPos(data, "UTG");
