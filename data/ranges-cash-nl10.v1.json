@@ -1,0 +1,46 @@
+{
+  "gameInfo": {
+    "game": "NL10",
+    "tableType": "6max",
+    "style": "ABC simple",
+    "description": "Rangos Cash NL10 v1 (visor por posición)."
+  },
+  "positions": {
+    "UTG": {
+      "firstIn": { "openRaise": ["AA","KK","QQ","JJ","TT","AKs","AKo","AQs","AQo","AJs","KQs"] },
+      "overLimp": { "overLimp": [], "isoRaise": [] },
+      "vsOpen": { "default": { "call": [], "threeBet": [] } },
+      "vs3bet": { "default": { "call": [], "fourBet": [] } }
+    },
+    "MP": {
+      "firstIn": { "openRaise": ["AA","KK","QQ","JJ","TT","99","AKs","AKo","AQs","AQo","AJs","AJo","ATs","KQs","QJs"] },
+      "overLimp": { "overLimp": [], "isoRaise": [] },
+      "vsOpen": { "default": { "call": [], "threeBet": [] } },
+      "vs3bet": { "default": { "call": [], "fourBet": [] } }
+    },
+    "CO": {
+      "firstIn": { "openRaise": ["AA","KK","QQ","JJ","TT","99","88","77","AKs","AKo","AQs","AQo","AJs","AJo","ATs","ATo","A9s","KQs","KJs","QJs","JTs","T9s"] },
+      "overLimp": { "overLimp": [], "isoRaise": [] },
+      "vsOpen": { "default": { "call": [], "threeBet": [] } },
+      "vs3bet": { "default": { "call": [], "fourBet": [] } }
+    },
+    "BTN": {
+      "firstIn": { "openRaise": ["AA","KK","QQ","JJ","TT","99","88","77","66","55","44","33","22","AKs","AKo","AQs","AQo","AJs","AJo","ATs","ATo","A9s","A8s","A7s","A6s","A5s","A4s","A3s","A2s","KQs","KJs","KTs","QJs","QTs","JTs","J9s","T9s","98s","76s"] },
+      "overLimp": { "overLimp": [], "isoRaise": [] },
+      "vsOpen": { "default": { "call": [], "threeBet": [] } },
+      "vs3bet": { "default": { "call": [], "fourBet": [] } }
+    },
+    "SB": {
+      "firstIn": { "openRaise": ["AA","KK","QQ","JJ","TT","99","88","77","AKs","AKo","AQs","AQo","AJs","AJo","ATs","KQs"] },
+      "overLimp": { "overLimp": [], "isoRaise": [] },
+      "vsOpen": { "default": { "call": [], "threeBet": [] } },
+      "vs3bet": { "default": { "call": [], "fourBet": [] } }
+    },
+    "BB": {
+      "firstIn": { "openRaise": [] },
+      "overLimp": { "overLimp": [], "isoRaise": [] },
+      "vsOpen": { "default": { "call": [], "threeBet": [] } },
+      "vs3bet": { "default": { "call": [], "fourBet": [] } }
+    }
+  }
+}

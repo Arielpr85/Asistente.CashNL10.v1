@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "name": "Postflop Cash NL10 v1",
+    "version": "1.0",
+    "notes": "Leyendas por boardType + handTier"
+  },
+  "boardTypes": ["SECO", "COORDINADO", "PAREADO", "MONOTONO"],
+  "handTiers": ["AIR", "WEAK", "MEDIUM", "STRONG", "MONSTER", "DRAW"],
+  "rules": {
+    "SECO": {
+      "AIR": {
+        "title": "Bluff selectivo / give up",
+        "line": "CHECK (la mayoría) / BET chico con buen blocking",
+        "bullets": ["No farolear sin equity", "Elegí bluffs con blockers", "No overbluff en micros"]
+      },
+      "MEDIUM": {
+        "title": "Valor / control",
+        "line": "BET 33% o CHECK",
+        "bullets": ["Apostá chico por valor/protección", "Controlá si hay riesgo de raise", "No inflar pot vs calling stations"]
+      },
+      "STRONG": {
+        "title": "Valor claro",
+        "line": "BET 66%",
+        "bullets": ["Apostar más grande para cobrar", "Preparar 2 barrels en runouts buenos"]
+      }
+    },
+    "COORDINADO": {
+      "DRAW": {
+        "title": "Semibluff",
+        "line": "BET 66% (si tenés equity real)",
+        "bullets": ["Preferí draws con +outs", "Evitar faroles sin equity", "Si te pagan, evaluar turn según carta"]
+      }
+    }
+  }
+}

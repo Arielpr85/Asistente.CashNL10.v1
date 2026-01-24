@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Visor de Rangos · Cash NL10 v1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./css/app.css" />
+</head>
+
+<body>
+  <div class="navbar">
+    <div class="small-label">Asistente Cash NL10 v1</div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap">
+      <a href="./index.html">Inicio</a>
+      <a href="./visor-rangos.html">Visor rangos</a>
+      <a href="./rules-postflop.html">Leyendas postflop</a>
+    </div>
+  </div>
+
+  <div class="app-shell">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+      <div>
+        <div class="small-label">Modo visor</div>
+        <div style="font-weight:800;font-size:1.1rem">Rangos por posición</div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center">
+        <label class="small-label" style="margin:0">Posición</label>
+        <select id="posSelect" style="background:#020617;border:1px solid #1f2937;color:#e5e7eb;padding:8px 10px;border-radius:10px">
+          <option value="">— Elegí —</option>
+          <option>UTG</option>
+          <option>MP</option>
+          <option>CO</option>
+          <option>BTN</option>
+          <option>SB</option>
+          <option>BB</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="posTitle" class="title-pos">—</div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <div class="card-panel" style="padding:12px">
+        <div class="board-title">EN POZO SIN ABRIR</div>
+        <div class="board-sub">Open Raise</div>
+        <div style="margin-top:12px" id="gridFirstIn"></div>
+      </div>
+
+      <div class="card-panel" style="padding:12px">
+        <div class="board-title">SI HUBO LIMPERS</div>
+        <div class="board-sub">Overlimp / IsoRaise</div>
+        <div style="margin-top:12px" id="gridOverlimp"></div>
+      </div>
+
+      <div class="card-panel" style="padding:12px">
+        <div class="board-title">SI HUBO OPEN RAISE</div>
+        <div class="board-sub">Call / 3bet (default)</div>
+        <div style="margin-top:12px" id="gridVsOpen"></div>
+      </div>
+    </div>
+
+    <div class="card-panel" style="padding:12px;margin-top:12px">
+      <div class="board-title">VS 3BET</div>
+      <div class="board-sub">Call / 4bet (default)</div>
+      <div style="margin-top:12px" id="gridVs3bet"></div>
+    </div>
+  </div>
+  <section class="card mt-3">
+  <div class="card__header">
+    <h2>Leyendas postflop</h2>
+    <p class="muted">Elegí tipo de board y tier de mano. Te muestra una guía rápida.</p>
+  </div>
+
+  <div class="card__body row">
+    <div class="col">
+      <label>Board type</label>
+      <select id="pfBoardType"></select>
+    </div>
+    <div class="col">
+      <label>Hand tier</label>
+      <select id="pfHandTier"></select>
+    </div>
+  </div>
+
+  <div class="card__body">
+    <div id="pfOutput" class="pf-output">
+      <div class="muted">Seleccioná opciones para ver la leyenda.</div>
+    </div>
+  </div>
+</section>
+
+<script type="module" src="./js/postflop-legend.js"></script>
+
+  <script type="module" src="./js/visor-rangos.js"></script>
+</body>
+</html>
