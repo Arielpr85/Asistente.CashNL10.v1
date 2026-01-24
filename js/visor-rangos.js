@@ -59,7 +59,12 @@ function getRangesData(){
 
 function arrSet(arr){ return new Set(Array.isArray(arr) ? arr : []); }
 
-function renderAllForPos(data, pos){
+function getVsBlock(container, key, fallbackKey = "default") {
+  if (!container) return null;
+  return container[key] || container[fallbackKey] || null;
+}
+
+function renderAllForPos(data, pos, vsOpenPos, vs3betPos){
   const posNode = data?.positions?.[pos];
   document.getElementById("posTitle").textContent = pos ? pos : "—";
   if (!posNode) return;
@@ -87,7 +92,8 @@ function renderAllForPos(data, pos){
   });
 
   // VS OPEN (default)
-  const vo = posNode.vsOpen?.default || { call:[], threeBet:[] };
+  const voKey = vsOpenPos || "default";
+  const vo = getVsBlock(posNode.vsOpen, voKey) || { call:[], threeBet:[] };
   const voCall = arrSet(vo.call);
   const vo3b   = arrSet(vo.threeBet);
 
@@ -98,7 +104,8 @@ function renderAllForPos(data, pos){
   });
 
   // VS 3BET (default)
-  const v3 = posNode.vs3bet?.default || { call:[], fourBet:[] };
+  const v3Key = vs3betPos || "default";
+  const v3 = getVsBlock(posNode.vs3bet, v3Key) || { call:[], fourBet:[] };
   const v3Call = arrSet(v3.call);
   const v34b   = arrSet(v3.fourBet);
 
@@ -112,10 +119,16 @@ function renderAllForPos(data, pos){
 // Init
 const data = getRangesData();
 const posSelect = document.getElementById("posSelect");
+const vsOpenSelect = document.getElementById("vsOpenSelect");
+const vs3betSelect = document.getElementById("vs3betSelect");
 
-posSelect.addEventListener("change", ()=>{
-  renderAllForPos(data, posSelect.value);
-});
+function renderFromUI() {
+  renderAllForPos(data, posSelect.value, vsOpenSelect?.value, vs3betSelect?.value);
+}
+
+posSelect.addEventListener("change", renderFromUI);
+vsOpenSelect?.addEventListener("change", renderFromUI);
+vs3betSelect?.addEventListener("change", renderFromUI);
 
 // auto: si querés arrancar en UTG
 // posSelect.value = "UTG"; renderAllForPos(data, "UTG");
