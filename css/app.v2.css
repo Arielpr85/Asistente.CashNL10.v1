@@ -22,6 +22,12 @@ body{
 }
 
 .app-shell{max-width:1320px;margin:0 auto;padding:1.25rem}
+@media (min-width: 1200px){
+  .app-shell{
+    max-width: 1480px;
+    padding: 1rem 0.75rem;
+  }
+}
 
 .navbar{
   display:flex;
