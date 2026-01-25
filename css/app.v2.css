@@ -162,7 +162,7 @@ body{
   border:1px solid rgba(15,23,42,.85);
 
   /* base */
-  background: rgba(15,23,42,.55);
+  background-color: rgba(15,23,42,.55);
   color: var(--text-main);
 
   user-select:none;
@@ -198,8 +198,8 @@ body{
    ✅ COLORES: DEJAR ESTO AL FINAL SIEMPRE
    (uso background shorthand + !important para que NO lo pise nada)
    ============================================================ */
-.range-cell.action-fold { background: var(--fold) !important; color:#fee2e2 !important; }
-.range-cell.action-open { background: var(--open) !important; color:#eff6ff !important; }
-.range-cell.action-call { background: var(--call) !important; color:#fffbeb !important; }
-.range-cell.action-3bet { background: var(--threebet) !important; color:#ecfdf5 !important; }
-.range-cell.action-4bet { background: var(--fourbet) !important; color:#ecfdf5 !important; }
+.range-cell.action-fold { background-color: var(--fold) !important; color:#fee2e2 !important; }
+.range-cell.action-open { background-color: var(--open) !important; color:#eff6ff !important; }
+.range-cell.action-call { background-color: var(--call) !important; color:#fffbeb !important; }
+.range-cell.action-3bet { background-color: var(--threebet) !important; color:#ecfdf5 !important; }
+.range-cell.action-4bet { background-color: var(--fourbet) !important; color:#ecfdf5 !important; }
