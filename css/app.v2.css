@@ -138,10 +138,11 @@ body{
 
 .range-grid{
   --gap: clamp(3px, 0.35vw, 6px);
-  --cell: min(42px, calc((100% - (12 * var(--gap))) / 13));
+  --cell: clamp(28px, 2.9vw, 42px);
 
   display:grid;
   grid-template-columns: repeat(13, var(--cell));
+  grid-auto-rows: var(--cell);
   gap: var(--gap);
   justify-content:center;
   width:100%;
