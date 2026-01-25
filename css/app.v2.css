@@ -137,8 +137,8 @@ body{
 }
 
 .range-grid{
-  --gap: clamp(3px, 0.35vw, 6px);
-  --cell: clamp(28px, 2.9vw, 42px);
+  --gap: clamp(3px, 0.3vw, 6px);
+  --cell: clamp(22px, 2.1vw, 34px);
 
   display:grid;
   grid-template-columns: repeat(13, var(--cell));
