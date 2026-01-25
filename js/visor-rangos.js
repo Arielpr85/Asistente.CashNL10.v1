@@ -1,72 +1,95 @@
 // js/visor-rangos.js
+import { APP } from "./config.js";
 
-const RANKS = ["A","K","Q","J","T","9","8","7","6","5","4","3","2"];
+const RANKS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"];
 
-// 13x13: arriba = suited, diagonal = pairs, abajo = offsuit
-function handCode(r1, r2, i, j){
-  if (i === j) return r1 + r2;           // pair
-  if (i < j)  return r1 + r2 + "s";      // suited
-  return r2 + r1 + "o";                 // offsuit (nota: invertimos para formato alto-bajo)
+function handCodeFixed(i, j) {
+  if (i === j) return RANKS[i] + RANKS[j];
+  const hi = RANKS[Math.min(i, j)];
+  const lo = RANKS[Math.max(i, j)];
+  const suited = i < j;
+  return suited ? hi + lo + "s" : hi + lo + "o";
 }
 
-// Para que abajo quede "AKo" (no "KAo"):
-function handCodeFixed(r1, r2, i, j){
-  if (i === j) return r1 + r2;
-  const hi = RANKS[Math.min(i,j)];
-  const lo = RANKS[Math.max(i,j)];
-  const suited = (i < j);
-  return suited ? (hi+lo+"s") : (hi+lo+"o");
-}
-
-function buildGrid(container, actionResolver){
+/**
+ * Crea una grilla 13x13 con clases CSS action-*
+ * @param {HTMLElement} container
+ * @param {(hand:string)=>("open"|"call"|"3bet"|"4bet"|"fold")} actionResolver
+ * @param {Object} labelMap - texto a mostrar en cell-act por acción (opcional)
+ */
+function buildGrid(container, actionResolver, labelMap = {}) {
   container.innerHTML = "";
+
+  const wrap = document.createElement("div");
+  wrap.className = "grid-wrap";
+
   const grid = document.createElement("div");
   grid.className = "range-grid";
 
-  for (let i=0;i<13;i++){
-    for (let j=0;j<13;j++){
-      const r1 = RANKS[i];
-      const r2 = RANKS[j];
-      const code = handCodeFixed(r1, r2, i, j);
+  const defaultLabels = {
+    open: "OR",
+    call: "CALL",
+    "3bet": "3B",
+    "4bet": "4B",
+    fold: "",
+  };
+
+  const labels = { ...defaultLabels, ...labelMap };
+
+  for (let i = 0; i < 13; i++) {
+    for (let j = 0; j < 13; j++) {
+      const code = handCodeFixed(i, j);
 
       const cell = document.createElement("div");
       cell.className = "range-cell";
-      cell.textContent = code;
 
-      const action = actionResolver(code, i, j); // "open" | "call" | "3bet" | "4bet" | "fold"
-      if (action === "open") cell.classList.add("action-open");
-      if (action === "call") cell.classList.add("action-call");
-      if (action === "3bet") cell.classList.add("action-3bet");
-      if (action === "4bet") cell.classList.add("action-4bet");
-      if (action === "fold") cell.classList.add("action-fold");
+      const handEl = document.createElement("div");
+      handEl.className = "cell-hand";
+      handEl.textContent = code;
 
+      const actEl = document.createElement("div");
+      actEl.className = "cell-act";
+
+      let action = actionResolver(code);
+
+      // Normalización fuerte (evita valores raros)
+      if (
+        action !== "open" &&
+        action !== "call" &&
+        action !== "3bet" &&
+        action !== "4bet" &&
+        action !== "fold"
+      ) {
+        action = "fold";
+      }
+
+      // Texto + clase SIEMPRE (incluye fold)
+      actEl.textContent = labels[action] ?? "";
+      cell.classList.add(`action-${action}`);
+
+      cell.appendChild(handEl);
+      cell.appendChild(actEl);
       grid.appendChild(cell);
     }
   }
-  container.appendChild(grid);
+
+  wrap.appendChild(grid);
+  container.appendChild(wrap);
 }
 
-function getRangesData(){
-  // 1) intenta leer lo editado por el editor
-  const raw = localStorage.getItem("RANGES_NL5_9MAX_JSON"); // <- si tu key es otra, la cambiamos acá
-  if (raw) {
-    try { return JSON.parse(raw); } catch(e){}
-  }
-
-  // 2) fallback: pegá tu json en un archivo y lo fetchamos (si hosteás)
-  return window.__RANGES__ || null;
+function arrSet(arr) {
+  return new Set(Array.isArray(arr) ? arr : []);
 }
 
-function arrSet(arr){ return new Set(Array.isArray(arr) ? arr : []); }
-
-function getVsBlock(container, key, fallbackKey = "default") {
-  if (!container) return null;
-  return container[key] || container[fallbackKey] || null;
+async function loadJson(url) {
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error(`No se pudo cargar ${url}`);
+  return await res.json();
 }
 
-function renderAllForPos(data, pos, vsOpenPos, vs3betPos){
+function renderAllForPos(data, pos) {
   const posNode = data?.positions?.[pos];
-  document.getElementById("posTitle").textContent = pos ? pos : "—";
+  document.getElementById("posTitle").textContent = pos || "—";
   if (!posNode) return;
 
   // FIRST IN
@@ -74,63 +97,74 @@ function renderAllForPos(data, pos, vsOpenPos, vs3betPos){
   const fiOpen = arrSet(fi.openRaise);
   const fiLimp = arrSet(fi.openLimp);
 
-  buildGrid(document.getElementById("gridFirstIn"), (hand)=>{
-    if (fiOpen.has(hand)) return "open";
-    if (fiLimp.has(hand)) return "call";
-    return "fold";
-  });
+  buildGrid(
+    document.getElementById("gridFirstIn"),
+    (hand) => {
+      if (fiOpen.has(hand)) return "open";
+      if (fiLimp.has(hand)) return "call";
+      return "fold";
+    },
+    { open: "OR", call: "L", fold: "" }
+  );
 
   // OVERLIMP / ISO
   const ol = posNode.overLimp || {};
   const olIso = arrSet(ol.isoRaise);
-  const olOL  = arrSet(ol.overLimp);
+  const olOL = arrSet(ol.overLimp);
 
-  buildGrid(document.getElementById("gridOverlimp"), (hand)=>{
-    if (olIso.has(hand)) return "3bet";   // usamos verde para Iso (como en tu leyenda)
-    if (olOL.has(hand))  return "call";   // overlimp = call
-    return "fold";
-  });
+  buildGrid(
+    document.getElementById("gridOverlimp"),
+    (hand) => {
+      if (olIso.has(hand)) return "3bet"; // visual ISO
+      if (olOL.has(hand)) return "call";
+      return "fold";
+    },
+    { "3bet": "ISO", call: "L", fold: "" }
+  );
 
-  // VS OPEN (default)
-  const voKey = vsOpenPos || "default";
-  const vo = getVsBlock(posNode.vsOpen, voKey) || { call:[], threeBet:[] };
+  // VS OPEN
+  const vo = posNode.vsOpen?.default || { call: [], threeBet: [] };
   const voCall = arrSet(vo.call);
-  const vo3b   = arrSet(vo.threeBet);
+  const vo3b = arrSet(vo.threeBet);
 
-  buildGrid(document.getElementById("gridVsOpen"), (hand)=>{
-    if (vo3b.has(hand)) return "3bet";
-    if (voCall.has(hand)) return "call";
-    return "fold";
-  });
+  buildGrid(
+    document.getElementById("gridVsOpen"),
+    (hand) => {
+      if (vo3b.has(hand)) return "3bet";
+      if (voCall.has(hand)) return "call";
+      return "fold";
+    },
+    { "3bet": "3B", call: "C", fold: "" }
+  );
 
-  // VS 3BET (default)
-  const v3Key = vs3betPos || "default";
-  const v3 = getVsBlock(posNode.vs3bet, v3Key) || { call:[], fourBet:[] };
+  // VS 3BET
+  const v3 = posNode.vs3bet?.default || { call: [], fourBet: [] };
   const v3Call = arrSet(v3.call);
-  const v34b   = arrSet(v3.fourBet);
+  const v34b = arrSet(v3.fourBet);
 
-  buildGrid(document.getElementById("gridVs3bet"), (hand)=>{
-    if (v34b.has(hand)) return "4bet";
-    if (v3Call.has(hand)) return "call";
-    return "fold";
-  });
+  buildGrid(
+    document.getElementById("gridVs3bet"),
+    (hand) => {
+      if (v34b.has(hand)) return "4bet";
+      if (v3Call.has(hand)) return "call";
+      return "fold";
+    },
+    { "4bet": "4B", call: "C", fold: "" }
+  );
 }
 
-// Init
-const data = getRangesData();
-const posSelect = document.getElementById("posSelect");
-const vsOpenSelect = document.getElementById("vsOpenSelect");
-const vs3betSelect = document.getElementById("vs3betSelect");
+(async function init() {
+  const data = await loadJson(APP.rangesUrl);
 
-function renderFromUI() {
-  renderAllForPos(data, posSelect.value, vsOpenSelect?.value, vs3betSelect?.value);
-}
+  const posSelect = document.getElementById("posSelect");
 
-function renderFromUI() {
-  renderAllForPos(data, posSelect.value);
-}
+  function render() {
+    renderAllForPos(data, posSelect.value);
+  }
 
-posSelect.addEventListener("change", renderFromUI);
+  posSelect.addEventListener("change", render);
 
-// auto: si querés arrancar en UTG
-// posSelect.value = "UTG"; renderAllForPos(data, "UTG");
+  if (posSelect.value) render();
+})();
+
+

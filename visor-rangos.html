@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <title>Visor de Rangos · Cash NL10 v1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="./css/app.css" />
+  <link rel="stylesheet" href="./css/app.v2.css?v=20260125-1" />
+
 </head>
 
 <body>
@@ -18,7 +20,8 @@
   </div>
 
   <div class="app-shell">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+    <div
+      style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px">
       <div>
         <div class="small-label">Modo visor</div>
         <div style="font-weight:800;font-size:1.1rem">Rangos por posición</div>
@@ -26,7 +29,8 @@
 
       <div style="display:flex;gap:10px;align-items:center">
         <label class="small-label" style="margin:0">Posición</label>
-        <select id="posSelect" style="background:#020617;border:1px solid #1f2937;color:#e5e7eb;padding:8px 10px;border-radius:10px">
+        <select id="posSelect"
+          style="background:#020617;border:1px solid #1f2937;color:#e5e7eb;padding:8px 10px;border-radius:10px">
           <option value="">— Elegí —</option>
           <option>UTG</option>
           <option>MP</option>
@@ -40,7 +44,7 @@
 
     <div id="posTitle" class="title-pos">—</div>
 
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+    <div class="ranges-3col">
       <div class="card-panel" style="padding:12px">
         <div class="board-title">EN POZO SIN ABRIR</div>
         <div class="board-sub">Open Raise</div>
@@ -60,38 +64,44 @@
       </div>
     </div>
 
-    <div class="card-panel" style="padding:12px;margin-top:12px">
-      <div class="board-title">VS 3BET</div>
-      <div class="board-sub">Call / 4bet</div>
-      <div style="margin-top:12px" id="gridVs3bet"></div>
-    </div>
-  </div>
-  <section class="card mt-3">
-  <div class="card__header">
-    <h2>Leyendas postflop</h2>
-    <p class="muted">Elegí tipo de board y tier de mano. Te muestra una guía rápida.</p>
-  </div>
+    <div class="bottom-row">
 
-  <div class="card__body row">
-    <div class="col">
-      <label>Board type</label>
-      <select id="pfBoardType"></select>
-    </div>
-    <div class="col">
-      <label>Hand tier</label>
-      <select id="pfHandTier"></select>
-    </div>
-  </div>
+      <div class="card-panel" style="padding:12px">
+        <div class="board-title">VS 3BET</div>
+        <div class="board-sub">Call / 4bet</div>
+        <div style="margin-top:12px" id="gridVs3bet"></div>
+      </div>
 
-  <div class="card__body">
-    <div id="pfOutput" class="pf-output">
-      <div class="muted">Seleccioná opciones para ver la leyenda.</div>
-    </div>
-  </div>
-</section>
+      <section class="card">
+        <div class="card__header">
+          <h2>Leyendas postflop</h2>
+          <p class="muted">Elegí tipo de board y tier de mano. Te muestra una guía rápida.</p>
+        </div>
 
-<script type="module" src="./js/postflop-legend.js"></script>
+        <div class="card__body row">
+          <div class="col">
+            <label>Board type</label>
+            <select id="pfBoardType"></select>
+          </div>
+          <div class="col">
+            <label>Hand tier</label>
+            <select id="pfHandTier"></select>
+          </div>
+        </div>
 
+        <div class="card__body">
+          <div id="pfOutput" class="pf-output">
+            <div class="muted">Seleccioná opciones para ver la leyenda.</div>
+          </div>
+        </div>
+      </section>
+
+    </div> <!-- /bottom-row -->
+  </div> <!-- /app-shell -->
+
+  <script type="module" src="./js/postflop-legend.js"></script>
   <script type="module" src="./js/visor-rangos.js"></script>
+
 </body>
+
 </html>
