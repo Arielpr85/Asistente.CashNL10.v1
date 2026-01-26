@@ -1,3 +1,5 @@
+// js/postflop-legend.js
+
 import { APP } from "./config.js";
 
 async function loadJson(url) {

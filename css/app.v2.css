@@ -71,22 +71,43 @@ body{
   font-weight:800;
   text-transform:uppercase;
   text-align:center;
-  font-size:.85rem;
+  font-size:.8rem;
+  margin-bottom: 2px;
   color:#cbd5e1
 }
 .board-sub{
-  font-size:.75rem;
+  font-size:.72rem;
   text-align:center;
   color:var(--text-muted);
-  margin-top:.25rem
+  margin-top: 0;
 }
 
-/* Layout de panels */
-.ranges-3col{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
+/* ====== GRID 2x2 para las 4 tarjetas ====== */
+.ranges-grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(520px, 1fr));
+  gap: 10px;
+  align-items: start;
 }
+
+/* en pantallas medianas, 1 columna */
+@media (max-width: 1100px){
+  .ranges-grid{ grid-template-columns: 1fr; }
+}
+
+/* ====== Leyendas como barra abajo ====== */
+.legend-bar{
+  margin-top: 10px;
+}
+
+/* ====== Achicar tarjetas SIN tocar celdas ====== */
+.card-panel{
+  padding: 8px !important;
+}
+
+/* opcional: bajar un poco el aire general */
+.title-pos{ margin: .25rem 0 .75rem; }
+
 @media (max-width: 1200px){
   .ranges-3col{ grid-template-columns: repeat(2, 1fr); }
 }
@@ -108,8 +129,8 @@ body{
 }
 
 .card{
-  margin-top: 16px;
-  padding: 16px;
+  margin-top: 10px;
+  padding: 12px;
   border-radius: 1rem;
   border: 1px solid var(--border-soft);
   background: rgba(2,6,23,.75);
@@ -176,6 +197,27 @@ body{
   padding:0;
 }
 
+/* ===== CLICK EN CELDAS (preflop pick) ===== */
+.range-cell{ cursor:pointer; }
+
+.range-cell.is-selected{
+  outline: 2px solid rgba(59,130,246,.95);
+  outline-offset: 1px;
+  box-shadow: 0 0 0 3px rgba(59,130,246,.22);
+}
+
+/* ===== Selección de celda (preflop pick) ===== */
+.range-cell.is-selected{
+  outline: 2px solid rgba(59,130,246,.95);
+  box-shadow: 0 0 0 3px rgba(59,130,246,.25);
+  transform: translateY(-1px);
+}
+
+.range-cell.is-disabled{
+  opacity: .55;
+  cursor: not-allowed;
+}
+
 .cell-hand{
   font-size: clamp(10px, calc(var(--cell) * 0.32), 13px);
   line-height:1;
@@ -210,3 +252,23 @@ body{
 .range-cell.action-call { background-color: var(--call) !important; color:#fffbeb !important; }
 .range-cell.action-3bet { background-color: var(--threebet) !important; color:#ecfdf5 !important; }
 .range-cell.action-4bet { background-color: var(--fourbet) !important; color:#ecfdf5 !important; }
+
+/* Suit icons */
+.suit {
+  display: inline-block;
+  margin-left: 2px;
+  font-weight: 900;
+}
+.suit-h { color: #ef4444; } /* rojo */
+.suit-s { color: #dbcccc; } /* claro */
+.suit-d { color: #4744ef; } 
+.suit-c { color: #80e584; } 
+.combo-btn {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+.combo-btn[disabled]{
+  opacity:.35;
+  cursor:not-allowed;
+}

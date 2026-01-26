@@ -39,67 +39,106 @@
           <option>SB</option>
           <option>BB</option>
         </select>
+        <button id="clearPick"
+          style="background:#020617;border:1px solid rgba(148,163,184,.25);color:#e5e7eb;padding:8px 10px;border-radius:10px;cursor:pointer">
+          Limpiar selección
+        </button>
       </div>
     </div>
 
     <div id="posTitle" class="title-pos">—</div>
 
-    <div class="ranges-3col">
+    <div class="ranges-grid">
       <div class="card-panel" style="padding:12px">
         <div class="board-title">EN POZO SIN ABRIR</div>
         <div class="board-sub">Open Raise</div>
-        <div style="margin-top:12px" id="gridFirstIn"></div>
+        <div style="margin-top:8px" id="gridFirstIn"></div>
       </div>
 
       <div class="card-panel" style="padding:12px">
         <div class="board-title">SI HUBO LIMPERS</div>
         <div class="board-sub">Overlimp / IsoRaise</div>
-        <div style="margin-top:12px" id="gridOverlimp"></div>
+        <div style="margin-top:8px" id="gridOverlimp"></div>
       </div>
 
       <div class="card-panel" style="padding:12px">
         <div class="board-title">SI HUBO OPEN RAISE</div>
         <div class="board-sub">Call / 3bet</div>
-        <div style="margin-top:12px" id="gridVsOpen"></div>
+        <div style="margin-top:8px" id="gridVsOpen"></div>
       </div>
-    </div>
-
-    <div class="bottom-row">
 
       <div class="card-panel" style="padding:12px">
         <div class="board-title">VS 3BET</div>
         <div class="board-sub">Call / 4bet</div>
-        <div style="margin-top:12px" id="gridVs3bet"></div>
+        <div style="margin-top:8px" id="gridVs3bet"></div>
+      </div>
+    </div>
+
+    <section class="card legend-bar">
+      <div class="card__header">
+        <h2>Postflop (MVP)</h2>
+        <p class="muted">
+          Usa la última mano seleccionada en el visor.
+          <br />
+          <strong>Preflop ctx:</strong> <span id="pfCtxLabel">—</span>
+          · <strong>Hero hand:</strong> <span id="heroHandLabel">—</span>
+        </p>
+        <div class="card__body" style="margin-top:10px">
+          <div class="small-label" style="margin-bottom:6px">Combos válidos (según mano seleccionada)</div>
+          <div id="heroCombos" style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+            <div class="muted">Seleccioná una mano en el visor para ver combos.</div>
+          </div>
+        </div>
+
       </div>
 
-      <section class="card">
-        <div class="card__header">
-          <h2>Leyendas postflop</h2>
-          <p class="muted">Elegí tipo de board y tier de mano. Te muestra una guía rápida.</p>
+      <div class="card__body row">
+        <div class="col">
+          <label>Hero 1</label>
+          <input id="hero1" placeholder="As"
+            style="background:#020617;border:1px solid #1f2937;color:#e5e7eb;padding:8px 10px;border-radius:10px;min-width:180px" />
+        </div>
+        <div class="col">
+          <label>Hero 2</label>
+          <input id="hero2" placeholder="Kd"
+            style="background:#020617;border:1px solid #1f2937;color:#e5e7eb;padding:8px 10px;border-radius:10px;min-width:180px" />
+        </div>
+        <div class="col">
+          <label>Flop 1</label>
+          <input id="flop1" placeholder="Kc"
+            style="background:#020617;border:1px solid #1f2937;color:#e5e7eb;padding:8px 10px;border-radius:10px;min-width:140px" />
+        </div>
+        <div class="col">
+          <label>Flop 2</label>
+          <input id="flop2" placeholder="9h"
+            style="background:#020617;border:1px solid #1f2937;color:#e5e7eb;padding:8px 10px;border-radius:10px;min-width:140px" />
+        </div>
+        <div class="col">
+          <label>Flop 3</label>
+          <input id="flop3" placeholder="2s"
+            style="background:#020617;border:1px solid #1f2937;color:#e5e7eb;padding:8px 10px;border-radius:10px;min-width:140px" />
+        </div>
+      </div>
+
+      <div class="card__body" style="margin-top:10px">
+        <button id="btnCalcFlop"
+          style="background:#020617;border:1px solid rgba(148,163,184,.25);color:#e5e7eb;padding:8px 12px;border-radius:10px;cursor:pointer">
+          Calcular FLOP
+        </button>
+
+        <div id="pfWarn"
+          style="display:none; margin-top:10px; padding:8px 10px; border:1px solid rgba(255,180,0,.35); border-radius:10px;">
         </div>
 
-        <div class="card__body row">
-          <div class="col">
-            <label>Board type</label>
-            <select id="pfBoardType"></select>
-          </div>
-          <div class="col">
-            <label>Hand tier</label>
-            <select id="pfHandTier"></select>
-          </div>
+        <div id="flopRec" class="pf-output" style="margin-top:10px">
+          <div class="muted">Cargá cartas y calculá.</div>
         </div>
+      </div>
+    </section>
 
-        <div class="card__body">
-          <div id="pfOutput" class="pf-output">
-            <div class="muted">Seleccioná opciones para ver la leyenda.</div>
-          </div>
-        </div>
-      </section>
-
-    </div> <!-- /bottom-row -->
   </div> <!-- /app-shell -->
 
-  <script type="module" src="./js/postflop-legend.js"></script>
+  <script type="module" src="./js/postflop-runner.js"></script>
   <script type="module" src="./js/visor-rangos.js"></script>
 
 </body>
