@@ -54,57 +54,78 @@ export function decideFlopAction(ctx) {
 
   // 0) Sin iniciativa => simplificamos
   if (!ini) {
-    if (ipState === "IP") return out("CHECK", `Sin iniciativa (IP) · ${texture} · check back (MVP)`);
+    if (ipState === "IP")
+      return out(
+        "CHECK",
+        `Sin iniciativa (IP) · ${texture} · check back (MVP)`,
+      );
     return out("CHECK", `Sin iniciativa (OOP) · ${texture} · check (MVP)`);
   }
 
   // 1) Con iniciativa (soy agresor preflop)
   // --- OFENSIVO_SECO (A/K/Q altos secos) => cbet chica casi range si IP
   if (texture === "OFENSIVO_SECO") {
-    if (ipState === "IP") return out("BET 33%", `Ini+IP · ${texture} · cbet chico rango (MVP)`);
+    if (ipState === "IP")
+      return out("BET 33%", `Ini+IP · ${texture} · cbet chico rango (MVP)`);
     // OOP: check bastante, pero en seco alto podemos apostar chico también (opcional)
     return out("CHECK", `Ini+OOP · ${texture} · check (MVP, simplificado)`);
   }
 
   // --- OFENSIVO_PAREADO (K K x / Q Q x...) => cbet chica bastante
   if (texture === "OFENSIVO_PAREADO") {
-    if (ipState === "IP") return out("BET 33%", `Ini+IP · ${texture} · paired alto, cbet chico (MVP)`);
+    if (ipState === "IP")
+      return out(
+        "BET 33%",
+        `Ini+IP · ${texture} · paired alto, cbet chico (MVP)`,
+      );
     return out("CHECK", `Ini+OOP · ${texture} · check (MVP)`);
   }
 
   // --- NEUTRO_SECO => IP mezcla, MVP: bet 33 si IP, check si OOP
   if (texture === "NEUTRO_SECO") {
-    if (ipState === "IP") return out("BET 33%", `Ini+IP · ${texture} · cbet chico (MVP)`);
+    if (ipState === "IP")
+      return out("BET 33%", `Ini+IP · ${texture} · cbet chico (MVP)`);
     return out("CHECK", `Ini+OOP · ${texture} · check (MVP)`);
   }
 
   // --- NEUTRO_COORDINADO => apostar más grande/menos frecuente. MVP: IP bet 50
   if (texture === "NEUTRO_COORDINADO") {
-    if (ipState === "IP") return out("BET 50%", `Ini+IP · ${texture} · cbet mediano (MVP)`);
+    if (ipState === "IP")
+      return out("BET 50%", `Ini+IP · ${texture} · cbet mediano (MVP)`);
     return out("CHECK", `Ini+OOP · ${texture} · check (MVP)`);
   }
 
   // --- OFENSIVO_COORDINADO => sigue siendo buen board para agresor, pero hay draws
   // MVP: IP bet 50
+  // --- OFENSIVO_COORDINADO => board alto + draws, seguimos presionando fuerte
+  // Base estrategia: BET 75% (IP)
   if (texture === "OFENSIVO_COORDINADO") {
-    if (ipState === "IP") return out("BET 50%", `Ini+IP · ${texture} · apostar mediano (MVP)`);
+    if (ipState === "IP")
+      return out("BET 75%", `Ini+IP · ${texture} · apostar grande (base)`);
     return out("CHECK", `Ini+OOP · ${texture} · check (MVP)`);
   }
 
   // --- MONOCOLOR (3 del mismo palo) => mucha cautela
   // MVP: IP bet 33 (poco), OOP check
-  if (texture === "OFENSIVO_MONOCOLOR" || texture === "NEUTRO_MONOCOLOR" || texture === "DEFENSIVO_MONOCOLOR") {
-    if (ipState === "IP") return out("BET 33%", `Ini+IP · ${texture} · monotono, bet chico (MVP)`);
+  if (
+    texture === "OFENSIVO_MONOCOLOR" ||
+    texture === "NEUTRO_MONOCOLOR" ||
+    texture === "DEFENSIVO_MONOCOLOR"
+  ) {
+    if (ipState === "IP")
+      return out("BET 33%", `Ini+IP · ${texture} · monotono, bet chico (MVP)`);
     return out("CHECK", `Ini+OOP · ${texture} · check (MVP)`);
   }
 
   // --- DEFENSIVO_* => favorece defensa/rango caller, más check
   if (texture.startsWith("DEFENSIVO_")) {
-    if (ipState === "IP") return out("CHECK", `Ini+IP · ${texture} · check back (MVP)`);
+    if (ipState === "IP")
+      return out("CHECK", `Ini+IP · ${texture} · check back (MVP)`);
     return out("CHECK", `Ini+OOP · ${texture} · check (MVP)`);
   }
 
   // Fallback
-  if (ipState === "IP") return out("BET 33%", `Ini+IP · ${texture} · fallback bet chico (MVP)`);
+  if (ipState === "IP")
+    return out("BET 33%", `Ini+IP · ${texture} · fallback bet chico (MVP)`);
   return out("CHECK", `Ini+OOP · ${texture} · fallback check (MVP)`);
 }

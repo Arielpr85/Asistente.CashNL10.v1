@@ -55,7 +55,6 @@ function isWheelDrawPossible(ranksVals) {
 }
 
 function computeConnectivity(ranksValsSortedAsc) {
-  // ranksValsSortedAsc: [low..high], 3 cartas
   const a = ranksValsSortedAsc[0];
   const b = ranksValsSortedAsc[1];
   const c = ranksValsSortedAsc[2];
@@ -64,13 +63,15 @@ function computeConnectivity(ranksValsSortedAsc) {
   const gap2 = c - b;
   const span = c - a;
 
-  // Conectividad fuerte si:
-  // - span <= 4 (muchas escaleras/gutshots)
-  // - o hay dos gaps chicos (<=2) típicos de boards conectados
+  // NUEVO: hay dos cartas consecutivas (QJ, JT, 98, etc.)
+  const hasAdjacent = (gap1 === 1) || (gap2 === 1);
+
   const strong = span <= 4 || ((gap1 <= 2) && (gap2 <= 2));
   const medium = span <= 6;
-  return { strong, medium, span, gap1, gap2 };
+
+  return { strong, medium, span, gap1, gap2, hasAdjacent };
 }
+
 
 function computeHighness(ranksValsSortedAsc) {
   const high = ranksValsSortedAsc[2];
@@ -124,37 +125,51 @@ export function classifyFlop(flopCards, preflopCtx = null) {
   let structure = "SECO";
 
   if (isMonotone) structure = "MONOCOLOR";
-  else if (isPaired || isTrips) structure = "PAREADO";
-  else {
-    // seco vs coordinado (tenemos 2-tone + conectividad => coordinado)
-    if (isTwoTone || conn.strong || conn.medium) structure = "COORDINADO";
-    else structure = "SECO";
-  }
+else if (isPaired || isTrips) structure = "PAREADO";
+else {
+  // NUEVO: si hay 2+ broadways y al menos una adyacencia (QJ, JT, KQ, etc.)
+  const broadwayAdj = (hi.broadways >= 2) && conn.hasAdjacent;
 
-  // ===== 2) IMPACT (MVP heurístico)
-  // Idea: boards altos y secos favorecen agresor (OR/3bet) => OFENSIVO
-  // boards bajos, conectados y/o con FD => DEFENSIVO
-  // lo demás => NEUTRO
+  if (isTwoTone || conn.strong || conn.medium || broadwayAdj) structure = "COORDINADO";
+  else structure = "SECO";
+}
+
+  // ===== 2) IMPACT (heurística ajustada para que exista OFENSIVO_COORDINADO)
+  // OFENSIVO_COORDINADO: boards altos + coordinados (broadways) => favorecen agresor
+  // DEFENSIVO_COORDINADO: boards bajos/medios muy conectados => favorecen caller
   let impact = "NEUTRO";
 
-  const danger = (
-    structure === "MONOCOLOR" ||
-    structure === "COORDINADO" ||
-    (structure === "PAREADO" && !hi.isHigh) // pareado bajo suele ser más “pegajoso”
-  );
+  // Helpers (ya existen hi y conn arriba)
+  const isHighCoord = (structure === "COORDINADO" && hi.isHigh && hi.broadways >= 2); // Q+ y 2+ broadways
+  const isVeryHighCoord = (structure === "COORDINADO" && hi.isHighHigh);              // K/A arriba
+  const isLowCoord = (structure === "COORDINADO" && hi.isLow);
+  const isMidStrongCoord = (structure === "COORDINADO" && hi.isMiddle && conn.strong);
 
-  const veryHighDry = (hi.isHighHigh && structure === "SECO"); // Kxx/Axx seco
-  const highDry = (hi.isHigh && structure === "SECO");         // Qxx seco
+  if (structure === "COORDINADO") {
+    if (isVeryHighCoord || isHighCoord) impact = "OFENSIVO";
+    else if (isLowCoord || isMidStrongCoord) impact = "DEFENSIVO";
+    else impact = "NEUTRO";
+  } else {
+    // ===== lógica anterior para SECO / PAREADO / MONOCOLOR
+    const danger = (
+      structure === "MONOCOLOR" ||
+      structure === "COORDINADO" ||
+      (structure === "PAREADO" && !hi.isHigh)
+    );
 
-  const lowAndConnected = (hi.isLow && (structure === "COORDINADO" || structure === "MONOCOLOR"));
-  const middleConnected = (hi.isMiddle && (structure === "COORDINADO" || structure === "MONOCOLOR"));
+    const veryHighDry = (hi.isHighHigh && structure === "SECO"); // Kxx/Axx seco
+    const highDry = (hi.isHigh && structure === "SECO");         // Qxx seco
 
-  if (veryHighDry) impact = "OFENSIVO";
-  else if (highDry && !danger) impact = "OFENSIVO";
-  else if (lowAndConnected) impact = "DEFENSIVO";
-  else if (middleConnected && conn.strong) impact = "DEFENSIVO";
-  else if (structure === "PAREADO" && hi.isHigh) impact = "OFENSIVO"; // K K x / Q Q x etc.
-  else impact = "NEUTRO";
+    const lowAndConnected = (hi.isLow && (structure === "COORDINADO" || structure === "MONOCOLOR"));
+    const middleConnected = (hi.isMiddle && (structure === "COORDINADO" || structure === "MONOCOLOR"));
+
+    if (veryHighDry) impact = "OFENSIVO";
+    else if (highDry && !danger) impact = "OFENSIVO";
+    else if (lowAndConnected) impact = "DEFENSIVO";
+    else if (middleConnected && conn.strong) impact = "DEFENSIVO";
+    else if (structure === "PAREADO" && hi.isHigh) impact = "OFENSIVO";
+    else impact = "NEUTRO";
+  }
 
   // (Opcional) si querés incorporar iniciativa / IP-OOP más adelante:
   // por ahora solo lo dejamos como flag para debug.

@@ -1,9 +1,46 @@
 // js/postflop-runner.js
 import { decideFlopAction } from "./flop-engine.js";
+import { pickCoaching } from "./coaching/coaching-registry.js";
 
 const PREFLOP_STORAGE_KEY = "PREFLOP_CTX";
-
 const BLOCK_ON_MISMATCH = true;
+// ✅ Modo estricto (anti-tilt)
+const STRICT_MODE_KEY = "POSTFLOP_STRICT_MODE";
+const STRICT_ACK_KEY = "POSTFLOP_STRICT_ACK"; // para ocultar el cartel tras “OK, foldeo”
+
+function loadStrictMode() {
+  try {
+    return localStorage.getItem(STRICT_MODE_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function saveStrictMode(on) {
+  try {
+    localStorage.setItem(STRICT_MODE_KEY, on ? "1" : "0");
+  } catch {}
+}
+
+function clearStrictAck() {
+  try {
+    localStorage.removeItem(STRICT_ACK_KEY);
+  } catch {}
+}
+
+function setStrictAck() {
+  try {
+    localStorage.setItem(STRICT_ACK_KEY, "1");
+  } catch {}
+}
+
+function hasStrictAck() {
+  try {
+    return localStorage.getItem(STRICT_ACK_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
 
 function loadStoredPreflopCtx() {
   try {
@@ -331,10 +368,105 @@ function getFlopFromInputs() {
 function renderFlopResult(rec) {
   const out = document.getElementById("flopRec");
   if (!out) return;
-  out.innerHTML = `
-    <div style="font-weight:800">FLOP: ${rec.action}</div>
-    <div style="opacity:.85; font-size:.9rem">${rec.note || ""}</div>
+
+  const strictOn = loadStrictMode();
+
+  // ===== HERO + BOARD desde inputs =====
+  const h1 = (document.getElementById("hero1")?.value || "").trim();
+  const h2 = (document.getElementById("hero2")?.value || "").trim();
+  const f1 = (document.getElementById("flop1")?.value || "").trim();
+  const f2 = (document.getElementById("flop2")?.value || "").trim();
+  const f3 = (document.getElementById("flop3")?.value || "").trim();
+
+  const parse = (txt) =>
+    txt && txt.length >= 2
+      ? { rank: txt[0].toUpperCase(), suit: txt[1].toLowerCase() }
+      : null;
+
+  const heroCards = [parse(h1), parse(h2)].filter(Boolean);
+  const boardCards = [parse(f1), parse(f2), parse(f3)].filter(Boolean);
+
+  // ===== COACHING (MODULAR) =====
+  const mod = pickCoaching(rec);
+  const plan = mod ? mod.build({ rec, heroCards, boardCards }) : null;
+
+  // ===== Anti-tilt =====
+  const actionUpper = (rec.action || "").toUpperCase();
+  const isBet33 = actionUpper.includes("BET 33") || actionUpper.includes("BET33");
+
+  const showStrictWarning =
+    strictOn &&
+    plan &&
+    (!plan.strictTrigger?.requiresBet33 || isBet33) &&
+    (!plan.strictTrigger?.requiresHandCat ||
+      plan.handCat === plan.strictTrigger.requiresHandCat) &&
+    !hasStrictAck();
+
+  const strictToggleHTML = `
+    <label style="display:flex;align-items:center;gap:8px;margin-top:10px;cursor:pointer">
+      <input id="strictModeToggle" type="checkbox" ${strictOn ? "checked" : ""} />
+      <b>Modo estricto (anti-tilt)</b>
+      <span style="opacity:.7;font-size:.85rem">— AIR vs raise = FOLD</span>
+    </label>
   `;
+
+  const strictWarningHTML = showStrictWarning
+    ? `
+      <div style="margin-top:12px;padding:12px;border-radius:12px;border:2px solid #ef4444;background:#3f1d1d">
+        <b>🚫 DISCIPLINA</b><br/>
+        Estás en <b>AIRE</b>. Si te <b>RAISEAN</b>, el plan correcto es <b>FOLD</b>.
+        <br/>
+        <button id="btnStrictAck" style="margin-top:8px">OK, foldeo</button>
+      </div>
+    `
+    : "";
+
+  // ===== HTML FINAL =====
+  let coachingHTML = "";
+
+  if (plan) {
+    const reminders = (plan.reminders || [])
+      .map((r) => `<li>${r}</li>`)
+      .join("");
+
+    coachingHTML = `
+      <div style="margin-top:10px;padding:12px;border:1px solid #334155;border-radius:12px">
+        <b>${plan.title}</b><br/>
+        <b>Base:</b> ${plan.base}<br/>
+        ${plan.handCat ? `<b>Tu mano:</b> ${plan.handCat}<br/>` : ""}
+        ${plan.vsRaise ? `<b>${plan.vsRaise}</b><br/>` : ""}
+        ${plan.extra ? `<div style="margin-top:6px;opacity:.95;font-size:.9rem">${plan.extra}</div>` : ""}
+        <ul>${reminders}</ul>
+        ${strictToggleHTML}
+        ${strictWarningHTML}
+      </div>
+    `;
+  } else {
+    coachingHTML = `
+      <div style="margin-top:10px;padding:12px;border:1px solid #334155;border-radius:12px">
+        ${strictToggleHTML}
+        <div style="opacity:.7">No hay coaching para este board todavía.</div>
+      </div>
+    `;
+  }
+
+  out.innerHTML = `
+    <div><b>FLOP:</b> ${rec.action}</div>
+    <div style="opacity:.8">${rec.note || ""}</div>
+    ${coachingHTML}
+  `;
+
+  // ===== LISTENERS =====
+  document.getElementById("strictModeToggle")?.addEventListener("change", (e) => {
+    saveStrictMode(e.target.checked);
+    clearStrictAck();
+    renderFlopResult(rec);
+  });
+
+  document.getElementById("btnStrictAck")?.addEventListener("click", () => {
+    setStrictAck();
+    renderFlopResult(rec);
+  });
 }
 
 function run() {
@@ -379,6 +511,7 @@ function run() {
     setWarn(msg);
     if (BLOCK_ON_MISMATCH) return;
   }
+  clearStrictAck();
 
   const rec = decideFlopAction({
     heroCards: [h1, h2],
