@@ -1,3 +1,5 @@
+// js/postflop-legend.js
+
 import { APP } from "./config.js";
 
 async function loadJson(url) {
@@ -36,7 +38,7 @@ function renderRule(outEl, rule) {
 }
 
 (async function init() {
-  const data = await loadJson(APP.postflopRules);
+  const data = await loadJson(APP.postflopUrl);
 
   const selBoard = document.getElementById("pfBoardType");
   const selTier = document.getElementById("pfHandTier");

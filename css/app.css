@@ -27,17 +27,31 @@ body{
 .board-title{font-weight:800;text-transform:uppercase;text-align:center;font-size:.85rem;color:#cbd5e1}
 .board-sub{font-size:.75rem;text-align:center;color:var(--text-muted);margin-top:.25rem}
 
-.range-grid{display:grid;grid-template-columns:repeat(13,minmax(34px,1fr));gap:4px}
+.range-grid{
+  --cell: 40px;
+  --gap: 6px;
+
+  display: grid;
+  grid-template-columns: repeat(13, var(--cell));
+  gap: var(--gap);
+  justify-content: center;
+  padding: 6px; /* aire interno */
+}
 .range-cell{
-  font-size:.78rem;
-  font-weight:600;
-  padding:6px 3px;
-  border-radius:6px;
-  border:1px solid rgba(15,23,42,.8);
-  text-align:center;
-  user-select:none;
-  background:var(--bg-main);
-  color:var(--text-main);
+  width: var(--cell);
+  height: var(--cell);
+  display:flex;
+  flex-direction: column;
+  align-items:center;
+  justify-content:center;
+
+  font-weight: 800;
+  border-radius: 10px;
+  border: 1px solid rgba(15,23,42,.85);
+  user-select: none;
+
+  /* que NO se deforme por padding */
+  padding: 0;
 }
 
 .action-fold{background:var(--fold);color:#fee2e2}
@@ -65,3 +79,120 @@ body{
   border-radius:10px;
 }
 .navbar a:hover{border-color:rgba(59,130,246,.7)}
+
+.card{
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 1rem;
+  border: 1px solid var(--border-soft);
+  background: rgba(2,6,23,.75);
+}
+
+.mt-3{ margin-top: 16px; }
+
+.card__header h2{
+  margin: 0 0 6px;
+  font-size: 1.2rem;
+}
+.card__header p{
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.row{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top: 10px;
+}
+.col{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.col select{
+  background:#020617;
+  border:1px solid #1f2937;
+  color:#e5e7eb;
+  padding:8px 10px;
+  border-radius:10px;
+  min-width: 180px;
+}
+
+.pf-output{
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid rgba(148,163,184,.25);
+  border-radius: 12px;
+  background: rgba(15,23,42,.6);
+}
+
+.pf-title{
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.pf-line{
+  margin-bottom: 8px;
+}
+.pf-bullets{
+  margin: 0;
+  padding-left: 18px;
+  color: #cbd5e1;
+}
+
+.cell-hand{
+  font-size: 12px;
+  line-height: 1;
+}
+.cell-act{
+  font-size: 9px;
+  opacity: .95;
+  margin-top: 2px;
+  line-height: 1;
+}
+.range-cell{ flex-direction:column; }
+
+/* Para que cada tabla quede “contenida” dentro de la card */
+.grid-wrap{
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ranges-3col{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+@media (max-width: 1100px){
+  .range-grid{ --cell: 36px; --gap: 5px; }
+  .cell-hand{ font-size: 11px; }
+  .cell-act{ font-size: 8px; }
+}
+
+@media (max-width: 820px){
+  .range-grid{ --cell: 34px; --gap: 4px; }
+  .cell-hand{ font-size: 10px; }
+  .cell-act{ font-size: 8px; }
+}
+
+.grid-wrap::-webkit-scrollbar{ height: 10px; }
+.grid-wrap::-webkit-scrollbar-thumb{ background: rgba(148,163,184,.25); border-radius: 999px; }
+.grid-wrap::-webkit-scrollbar-track{ background: rgba(2,6,23,.2); border-radius: 999px; }
+
+/* ✅ fila inferior: VS3BET + Leyendas postflop lado a lado */
+.bottom-row{
+  margin-top: 12px;
+  display: grid;
+  gap: 12px;
+}
+
+@media (min-width: 1100px){
+  .bottom-row{
+    grid-template-columns: 1.35fr 0.65fr; /* VS3BET más ancho */
+    align-items: start;
+  }
+}
