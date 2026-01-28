@@ -4,8 +4,19 @@
 // Impacto: OFENSIVO | NEUTRO | DEFENSIVO
 
 const RANK_VAL = {
-  "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9,
-  "T": 10, "J": 11, "Q": 12, "K": 13, "A": 14
+  2: 2,
+  3: 3,
+  4: 4,
+  5: 5,
+  6: 6,
+  7: 7,
+  8: 8,
+  9: 9,
+  T: 10,
+  J: 11,
+  Q: 12,
+  K: 13,
+  A: 14,
 };
 
 function toCardObj(card) {
@@ -51,7 +62,13 @@ function countBy(arr) {
 function isWheelDrawPossible(ranksVals) {
   // A-2-3-4-5 posibles en boards bajos con A presente o cerca
   // (MVP: no lo usamos fuerte todavía, pero queda para mejorar)
-  return ranksVals.includes(14) && (ranksVals.includes(2) || ranksVals.includes(3) || ranksVals.includes(4) || ranksVals.includes(5));
+  return (
+    ranksVals.includes(14) &&
+    (ranksVals.includes(2) ||
+      ranksVals.includes(3) ||
+      ranksVals.includes(4) ||
+      ranksVals.includes(5))
+  );
 }
 
 function computeConnectivity(ranksValsSortedAsc) {
@@ -64,14 +81,13 @@ function computeConnectivity(ranksValsSortedAsc) {
   const span = c - a;
 
   // NUEVO: hay dos cartas consecutivas (QJ, JT, 98, etc.)
-  const hasAdjacent = (gap1 === 1) || (gap2 === 1);
+  const hasAdjacent = gap1 === 1 || gap2 === 1;
 
-  const strong = span <= 4 || ((gap1 <= 2) && (gap2 <= 2));
+  const strong = span <= 4 || (gap1 <= 2 && gap2 <= 2);
   const medium = span <= 6;
 
   return { strong, medium, span, gap1, gap2, hasAdjacent };
 }
-
 
 function computeHighness(ranksValsSortedAsc) {
   const high = ranksValsSortedAsc[2];
@@ -86,10 +102,10 @@ function computeHighness(ranksValsSortedAsc) {
     high,
     broadways,
     hasA,
-    isHighHigh: high >= 13,      // K/A
-    isHigh: high >= 12,          // Q+
+    isHighHigh: high >= 13, // K/A
+    isHigh: high >= 12, // Q+
     isMiddle: high >= 9 && high <= 11, // 9..J
-    isLow: high <= 8
+    isLow: high <= 8,
   };
 }
 
@@ -101,22 +117,22 @@ export function classifyFlop(flopCards, preflopCtx = null) {
       structure: "UNKNOWN",
       impact: "UNKNOWN",
       texture: "UNKNOWN_UNKNOWN",
-      flags: { error: "Need 3 flop cards" }
+      flags: { error: "Need 3 flop cards" },
     };
   }
 
-  const ranks = cards.map(c => c.rank);
-  const suits = cards.map(c => c.suit);
+  const ranks = cards.map((c) => c.rank);
+  const suits = cards.map((c) => c.suit);
 
   const ranksVals = ranks.map(rankVal).sort((a, b) => a - b);
   const uniqRanks = uniq(ranks);
   const uniqSuits = uniq(suits);
 
   const rankCounts = countBy(ranks);
-  const isPaired = uniqRanks.length < 3;        // xxY
-  const isTrips = uniqRanks.length === 1;       // xxx (raro, pero posible)
-  const isMonotone = uniqSuits.length === 1;    // 3 del mismo palo
-  const isTwoTone = uniqSuits.length === 2;     // 2 del mismo palo (FD posible)
+  const isPaired = uniqRanks.length < 3; // xxY
+  const isTrips = uniqRanks.length === 1; // xxx (raro, pero posible)
+  const isMonotone = uniqSuits.length === 1; // 3 del mismo palo
+  const isTwoTone = uniqSuits.length === 2; // 2 del mismo palo (FD posible)
 
   const conn = computeConnectivity(ranksVals);
   const hi = computeHighness(ranksVals);
@@ -125,14 +141,31 @@ export function classifyFlop(flopCards, preflopCtx = null) {
   let structure = "SECO";
 
   if (isMonotone) structure = "MONOCOLOR";
-else if (isPaired || isTrips) structure = "PAREADO";
-else {
-  // NUEVO: si hay 2+ broadways y al menos una adyacencia (QJ, JT, KQ, etc.)
-  const broadwayAdj = (hi.broadways >= 2) && conn.hasAdjacent;
+  else if (isPaired || isTrips) structure = "PAREADO";
+  else {
+    // NUEVO: si hay 2+ broadways y al menos una adyacencia (QJ, JT, KQ, etc.)
+    const broadwayAdj = hi.broadways >= 2 && conn.hasAdjacent;
 
-  if (isTwoTone || conn.strong || conn.medium || broadwayAdj) structure = "COORDINADO";
-  else structure = "SECO";
-}
+    if (isTwoTone || conn.strong || conn.medium || broadwayAdj)
+      structure = "COORDINADO";
+    else {
+      // 1) Con FD: coordinado
+      if (isTwoTone) {
+        structure = "COORDINADO";
+      } else {
+        // 2) Conectividad "real" (no solo span): adyacencia o conectividad fuerte
+        // - conn.strong cubre 3 cartas conectadas tipo T98 / 987 / QJT etc.
+        // - conn.hasAdjacent cubre 2 cartas pegadas tipo JT4 / QJ2 / T84 etc.
+        const realConnect = conn.strong || conn.hasAdjacent;
+
+        // 3) Extra: si hay 2 broadways (QJ, JT, KQ) aunque el tercero sea bajo -> coordinado
+        const broadwayAdj = hi.broadways >= 2 && conn.hasAdjacent;
+
+        if (realConnect || broadwayAdj) structure = "COORDINADO";
+        else structure = "SECO";
+      }
+    }
+  }
 
   // ===== 2) IMPACT (heurística ajustada para que exista OFENSIVO_COORDINADO)
   // OFENSIVO_COORDINADO: boards altos + coordinados (broadways) => favorecen agresor
@@ -140,10 +173,12 @@ else {
   let impact = "NEUTRO";
 
   // Helpers (ya existen hi y conn arriba)
-  const isHighCoord = (structure === "COORDINADO" && hi.isHigh && hi.broadways >= 2); // Q+ y 2+ broadways
-  const isVeryHighCoord = (structure === "COORDINADO" && hi.isHighHigh);              // K/A arriba
-  const isLowCoord = (structure === "COORDINADO" && hi.isLow);
-  const isMidStrongCoord = (structure === "COORDINADO" && hi.isMiddle && conn.strong);
+  const isHighCoord =
+    structure === "COORDINADO" && hi.isHigh && hi.broadways >= 2; // Q+ y 2+ broadways
+  const isVeryHighCoord = structure === "COORDINADO" && hi.isHighHigh; // K/A arriba
+  const isLowCoord = structure === "COORDINADO" && hi.isLow;
+  const isMidStrongCoord =
+    structure === "COORDINADO" && hi.isMiddle && conn.strong;
 
   if (structure === "COORDINADO") {
     if (isVeryHighCoord || isHighCoord) impact = "OFENSIVO";
@@ -151,17 +186,18 @@ else {
     else impact = "NEUTRO";
   } else {
     // ===== lógica anterior para SECO / PAREADO / MONOCOLOR
-    const danger = (
+    const danger =
       structure === "MONOCOLOR" ||
       structure === "COORDINADO" ||
-      (structure === "PAREADO" && !hi.isHigh)
-    );
+      (structure === "PAREADO" && !hi.isHigh);
 
-    const veryHighDry = (hi.isHighHigh && structure === "SECO"); // Kxx/Axx seco
-    const highDry = (hi.isHigh && structure === "SECO");         // Qxx seco
+    const veryHighDry = hi.isHighHigh && structure === "SECO"; // Kxx/Axx seco
+    const highDry = hi.isHigh && structure === "SECO"; // Qxx seco
 
-    const lowAndConnected = (hi.isLow && (structure === "COORDINADO" || structure === "MONOCOLOR"));
-    const middleConnected = (hi.isMiddle && (structure === "COORDINADO" || structure === "MONOCOLOR"));
+    const lowAndConnected =
+      hi.isLow && (structure === "COORDINADO" || structure === "MONOCOLOR");
+    const middleConnected =
+      hi.isMiddle && (structure === "COORDINADO" || structure === "MONOCOLOR");
 
     if (veryHighDry) impact = "OFENSIVO";
     else if (highDry && !danger) impact = "OFENSIVO";
@@ -188,7 +224,7 @@ else {
       isTwoTone,
       connectivity: conn,
       highness: hi,
-      ipState
-    }
+      ipState,
+    },
   };
 }

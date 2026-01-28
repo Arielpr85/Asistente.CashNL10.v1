@@ -1,5 +1,8 @@
 // js/visor-rangos.js
 import { APP } from "./config.js";
+import { exposeHandCatDebug } from "./hand-cat-mvp.js";
+exposeHandCatDebug();
+
 
 const RANKS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"];
 
