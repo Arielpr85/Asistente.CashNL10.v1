@@ -434,6 +434,7 @@ function renderFlopResult(rec) {
         <b>${plan.title}</b><br/>
         <b>Base:</b> ${plan.base}<br/>
         ${plan.handCat ? `<b>Tu mano:</b> ${plan.handCat}<br/>` : ""}
+        ${plan.intent ? `<b>Tu intención:</b> ${plan.intent}<br/>` : ""}
         ${plan.vsRaise ? `<b>${plan.vsRaise}</b><br/>` : ""}
         ${plan.extra ? `<div style="margin-top:6px;opacity:.95;font-size:.9rem">${plan.extra}</div>` : ""}
         <ul>${reminders}</ul>

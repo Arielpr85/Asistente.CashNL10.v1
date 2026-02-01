@@ -1,14 +1,18 @@
 // js/flop-engine.js
-// Motor FLOP (HU) - MVP
-// - Usa classifyFlop() para texture (OFENSIVO/NEUTRO/DEFENSIVO + SECO/COORDINADO/MONOCOLOR/PAREADO)
-// - Usa PREFLOP_CTX para initiative + ipState (IP/OOP)
-// - Devuelve una recomendación simple y consistente (sin "CHECK/CALL")
+// Motor FLOP (HU) - Refactor: el engine arma contexto y delega la acción al coaching.
+// - Usa classifyFlop() para texture
+// - Usa evaluator + adapters para handCat + intent
+// - Usa coaching-registry para decidir acción
 
 import { classifyFlop } from "./board-classifier.js";
+import { pickCoaching } from "./coaching/coaching-registry.js";
+
+import { evaluateHeroHandFlop } from "./hand-evaluator-flop.js";
+import { adaptHandCatFromEval } from "./coaching/handcat-adapter.js";
+import { toIntent } from "./coaching/intent-adapter.js";
 
 /** Determina si HERO tiene iniciativa por la acción preflop */
 export function hasInitiative(preflopCtx) {
-  // En tu visor preflop: action suele ser "open" | "3bet" | "4bet" | "call"
   const a = (preflopCtx?.action || "").toLowerCase();
   return a === "open" || a === "3bet" || a === "4bet";
 }
@@ -20,112 +24,123 @@ function getIpState(preflopCtx) {
   return "UNKNOWN";
 }
 
-/** Acción estándar */
-function out(action, note = "") {
-  return { street: "FLOP", action, note };
+function out(rec) {
+  return {
+    street: "FLOP",
+    action: rec.action,
+    note: rec.note,
+    // extra debug útil (no rompe nada si la UI no lo usa)
+    texture: rec.texture,
+    spot: rec.spot,
+    ipState: rec.ipState,
+    ini: rec.ini,
+  };
 }
 
-/**
- * ctx esperado:
- * {
- *   heroCards: [ {rank,suit} | "As" | ... ],
- *   boardCards: [3 cartas flop],
- *   preflopCtx: { pos, hand, action, scenario, ipState }
- * }
- */
+function safeEvalHandCat(heroCards, boardCards) {
+  try {
+    const ev = evaluateHeroHandFlop(heroCards, boardCards);
+    return adaptHandCatFromEval(ev);
+  } catch {
+    return null;
+  }
+}
+
 export function decideFlopAction(ctx) {
   const preflopCtx = ctx?.preflopCtx || null;
   const heroCards = ctx?.heroCards || [];
   const boardCards = ctx?.boardCards || [];
 
-  // Clasificación del flop
-  const flopInfo = classifyFlop(boardCards, preflopCtx);
-  const texture = flopInfo.texture; // ej: "OFENSIVO_SECO"
-
   const ipState = getIpState(preflopCtx);
   const ini = hasInitiative(preflopCtx);
 
-  // Reglas MVP HU:
-  // - Si tengo iniciativa e IP: cbet más frecuente
-  // - Si tengo iniciativa y OOP: más check, salvo boards muy favorables
-  // - Si NO tengo iniciativa: IP tiende a check back; OOP check (y listo)
-  //
-  // (Luego le sumamos hand tiers para selectividad real)
+  // si faltan datos, fallback seguro
+  if (!boardCards || boardCards.length !== 3) {
+    return out({
+      action: "CHECK",
+      note: "FLOP inválido · faltan cartas",
+      texture: "UNKNOWN_UNKNOWN",
+      spot: "UNK_UNKNOWN_UNKNOWN",
+      ipState,
+      ini,
+    });
+  }
 
-  // 0) Sin iniciativa => simplificamos
+  const flopInfo = classifyFlop(boardCards, preflopCtx);
+  const texture = flopInfo.texture; // ej: "DEFENSIVO_SECO"
+
+  const posTag = ipState === "IP" ? "IP" : ipState === "OOP" ? "OOP" : "UNK";
+  const spot = `${posTag}_${texture}`; // ej: "IP_DEFENSIVO_SECO"
+
+  // sin iniciativa: por ahora simplificamos (MVP)
   if (!ini) {
-    if (ipState === "IP")
-      return out(
-        "CHECK",
-        `Sin iniciativa (IP) · ${texture} · check back (MVP)`,
-      );
-    return out("CHECK", `Sin iniciativa (OOP) · ${texture} · check (MVP)`);
+    const note =
+      ipState === "IP"
+        ? `Sin iniciativa (IP) · ${texture} · check back (MVP) · ${spot}`
+        : `Sin iniciativa (OOP) · ${texture} · check (MVP) · ${spot}`;
+
+    return out({
+      action: "CHECK",
+      note,
+      texture,
+      spot,
+      ipState,
+      ini,
+    });
   }
 
-  // 1) Con iniciativa (soy agresor preflop)
-  // --- OFENSIVO_SECO (A/K/Q altos secos) => cbet chica casi range si IP
-  if (texture === "OFENSIVO_SECO") {
-    if (ipState === "IP")
-      return out("BET 33%", `Ini+IP · ${texture} · cbet chico rango (MVP)`);
-    // OOP: check bastante, pero en seco alto podemos apostar chico también (opcional)
-    return out("CHECK", `Ini+OOP · ${texture} · check (MVP, simplificado)`);
+  // con iniciativa: calculamos handCat + intent (para DEFENSIVO selectivo)
+  const handCat =
+    heroCards?.length === 2 && boardCards?.length === 3
+      ? safeEvalHandCat(heroCards, boardCards)
+      : null;
+
+  const intent = handCat ? toIntent(handCat) : null;
+
+  // rec base que verá el coaching (y la UI)
+  const recBase = {
+    street: "FLOP",
+    texture,
+    spot,
+    ipState,
+    ini,
+    handCat,
+    intent,
+    note: `Ini+${ipState} · ${texture} · ${spot}`,
+    action: "CHECK", // default
+  };
+
+  // delegación al coaching
+  const mod = pickCoaching(recBase);
+
+  if (mod && typeof mod.decideAction === "function") {
+    const action = mod.decideAction({
+      ipState,
+      ini,
+      texture,
+      spot,
+      handCat,
+      intent,
+      heroCards,
+      boardCards,
+      preflopCtx,
+    });
+
+    return out({
+      ...recBase,
+      action: action || "CHECK",
+      note: `${recBase.note} · action=${action || "CHECK"}`,
+    });
   }
 
-  // --- OFENSIVO_PAREADO (K K x / Q Q x...) => cbet chica bastante
-  if (texture === "OFENSIVO_PAREADO") {
-    if (ipState === "IP")
-      return out(
-        "BET 33%",
-        `Ini+IP · ${texture} · paired alto, cbet chico (MVP)`,
-      );
-    return out("CHECK", `Ini+OOP · ${texture} · check (MVP)`);
-  }
+  // fallback (para texturas sin módulo todavía)
+  // OFENSIVO_* IP: mantenemos comportamiento previo simple
+  if (texture === "OFENSIVO_SECO" && ipState === "IP")
+    return out({ ...recBase, action: "BET 33%", note: `${recBase.note} · fallback` });
 
-  // --- NEUTRO_SECO => IP mezcla, MVP: bet 33 si IP, check si OOP
-  if (texture === "NEUTRO_SECO") {
-    if (ipState === "IP")
-      return out("BET 33%", `Ini+IP · ${texture} · cbet chico (MVP)`);
-    return out("CHECK", `Ini+OOP · ${texture} · check (MVP)`);
-  }
+  if (texture === "OFENSIVO_COORDINADO" && ipState === "IP")
+    return out({ ...recBase, action: "BET 75%", note: `${recBase.note} · fallback` });
 
-  // --- NEUTRO_COORDINADO => apostar más grande/menos frecuente. MVP: IP bet 50
-  if (texture === "NEUTRO_COORDINADO") {
-    if (ipState === "IP")
-      return out("BET 50%", `Ini+IP · ${texture} · cbet mediano (MVP)`);
-    return out("CHECK", `Ini+OOP · ${texture} · check (MVP)`);
-  }
-
-  // --- OFENSIVO_COORDINADO => sigue siendo buen board para agresor, pero hay draws
-  // MVP: IP bet 50
-  // --- OFENSIVO_COORDINADO => board alto + draws, seguimos presionando fuerte
-  // Base estrategia: BET 75% (IP)
-  if (texture === "OFENSIVO_COORDINADO") {
-    if (ipState === "IP")
-      return out("BET 75%", `Ini+IP · ${texture} · apostar grande (base)`);
-    return out("CHECK", `Ini+OOP · ${texture} · check (MVP)`);
-  }
-
-  // --- MONOCOLOR (3 del mismo palo) => mucha cautela
-  // MVP: IP bet 33 (poco), OOP check
-  if (
-    texture === "OFENSIVO_MONOCOLOR" ||
-    texture === "NEUTRO_MONOCOLOR" ||
-    texture === "DEFENSIVO_MONOCOLOR"
-  ) {
-    if (ipState === "IP")
-      return out("BET 33%", `Ini+IP · ${texture} · monotono, bet chico (MVP)`);
-    return out("CHECK", `Ini+OOP · ${texture} · check (MVP)`);
-  }
-
-  // --- DEFENSIVO_* => favorece defensa/rango caller, más check
-  if (texture.startsWith("DEFENSIVO_")) {
-    if (ipState === "IP")
-      return out("CHECK", `Ini+IP · ${texture} · check back (MVP)`);
-    return out("CHECK", `Ini+OOP · ${texture} · check (MVP)`);
-  }
-
-  // Fallback
-  if (ipState === "IP")
-    return out("BET 33%", `Ini+IP · ${texture} · fallback bet chico (MVP)`);
-  return out("CHECK", `Ini+OOP · ${texture} · fallback check (MVP)`);
+  // resto: check
+  return out({ ...recBase, action: "CHECK", note: `${recBase.note} · fallback` });
 }
